@@ -1,6 +1,6 @@
 {
     "name": "basic-dev-env",
-    "version": "2020.1",
+    "version": "1.0.0",
     "description": "Standard Entwicklungs Umgebung basierend auf Gulp, TypeScript/JS ES6+ und SASS",
     "main": "index.js",
     "scripts": {

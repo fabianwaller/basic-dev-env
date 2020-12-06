@@ -43,7 +43,7 @@ const serve = (done) => {
 // Compile sass into css with gulp
 const css = () => {
     // Find SASS
-    return gulp.src(`${src}/sass/**/*.sass`)
+    return gulp.src(`${src}/assets/sass/**/*.sass`)
         // Init Plumber
         .pipe(plumber())
         // Start Source Map
@@ -57,7 +57,7 @@ const css = () => {
         // Write Source Map
         .pipe(sourcemaps.write(''))
         // Write everything to destination folder
-        .pipe(gulp.dest(`${dest}/css`))
+        .pipe(gulp.dest(`${dest}/assets/css`))
         // Reload Page
         .pipe(browserSync.stream());
 };
@@ -84,7 +84,7 @@ const html = () => {
 
 // Compile .js to minify .js
 const script = () => {
-    return browserify(`${src}/js/main.js`, {debug: true})
+    return browserify(`${src}/assets/js/main.js`, {debug: true})
         .transform('babelify', {
             presets: ['babel-preset-env'],
             plugins: ['babel-plugin-transform-runtime']
@@ -95,25 +95,31 @@ const script = () => {
         .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(terser())
         .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(`${dest}/js`));
+        .pipe(gulp.dest(`${dest}/assets/js`));
 };
 
 // Copy Assets
-const assets = () => {
-    return gulp.src(`${src}/assets/**`)
-        .pipe(gulp.dest(`${dest}/assets`));
+const img = () => {
+    return gulp.src(`${src}/assets/img/**`)
+    .pipe(gulp.dest(`${dest}/assets/img`));
+};
+
+// Copy Fonts
+const font = () => {
+    return gulp.src(`${src}/assets/font/**`)
+    .pipe(gulp.dest(`${dest}/assets/font`));
 };
 
 // Function to watch our Changes and refreash page
 const watch = () => gulp.watch(
-    [`${src}/*.html`, `${src}/js/**/*.js`, `${src}/sass/**/*.sass`, `${src}/assets/**/*.*`],
-    gulp.series(assets, css, script, html, reload));
+    [`${src}/*.html`, `${src}/assets/js/**/*.js`, `${src}/assets/sass/**/*.sass`, `${src}/assets/**/*.*`],
+    gulp.series(img, font, css, script, html, reload));
 
 // All Tasks for this Project
-const dev = gulp.series(assets, css, script, html, serve, watch);
+const dev = gulp.series(img, font, css, script, html, serve, watch);
 
 // Just Build the Project
-const build = gulp.series(css, script, html, assets);
+const build = gulp.series(css, script, html, img, font);
 
 // Default function (used when type gulp)
 exports.dev = dev;
